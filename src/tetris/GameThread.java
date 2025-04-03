@@ -8,13 +8,16 @@ public class GameThread extends Thread{
   @Override
   public void run(){
     while(true){
-      try {
-        ga.moveBlockDown();
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+      ga.spawnBlock();
+      while(ga.moveBlockDown()){
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
+
     }
 
   }
