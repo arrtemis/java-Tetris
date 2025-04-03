@@ -5,10 +5,17 @@ import javax.swing.JFrame;
 import java.awt.*;
 
 public class GameFrame extends JFrame{
+  private GameArea ga;
 
   public GameFrame(){
+    ga = new GameArea(10);
     initComponents();
-    add(new GameArea(10));
+    add(ga);
+    startGame();
+  }
+
+  public void startGame(){
+    new GameThread(ga).start();
   }
 
   public void initComponents(){
