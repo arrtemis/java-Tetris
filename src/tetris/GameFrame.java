@@ -21,9 +21,15 @@ public class GameFrame extends JFrame {
     ga = new GameArea(10);
 
     scoreDisplay.setBounds(439, 378, 55, 24);
-    levelDisplay.setBounds(446, 70, 50, 24);
-    score.setBounds(458, 402, 15, 24);
-    level.setBounds(461, 94, 10, 24);
+    levelDisplay.setBounds(446, 70, 61, 26);
+    score.setBounds(458, 402, 25, 26);
+    level.setBounds(461, 96, 25, 26);
+
+    Font font = new Font("Roboto Mono", Font.PLAIN, 20);
+    scoreDisplay.setFont(font);
+    levelDisplay.setFont(font);
+    score.setFont(font);
+    level.setFont(font);
 
     initComponents();
     initControls();
