@@ -25,21 +25,24 @@ public class GameArea extends JPanel {
 
   // movements
   public void moveBlockLeft() { // <-- key
-    if(checkLeft() || block == null) return;
+    if (checkLeft() || block == null)
+      return;
 
     block.moveLeft();
     repaint();
   }
 
   public void moveBlockRight() { // --> key
-    if(checkRight() || block == null) return;
+    if (checkRight() || block == null)
+      return;
 
     block.moveRight();
     repaint();
   }
 
   public void dropBlockDown() { // down arrow key
-    if(block == null) return;
+    if (block == null)
+      return;
     while (!checkBottom()) {
       block.moveDown();
     }
@@ -47,19 +50,20 @@ public class GameArea extends JPanel {
   }
 
   public void rotateBlock() { // up arrow key
-    if(block == null) return;
+    if (block == null)
+      return;
     int currentRotation = block.getCurrentRotation();
 
     block.rotate();
 
-    if(!isRotationValid()){
+    if (!isRotationValid()) {
       block.setRotation(currentRotation);
     }
-    
+
     repaint();
   }
 
-  //movement validators
+  // movement validators
   private boolean checkBottom() {
     if (block.getBottom() == gridRows) {
       return true;
@@ -69,14 +73,15 @@ public class GameArea extends JPanel {
     int width = block.getWidth();
     int[][] shape = block.getShape();
     for (int col = 0; col < width; col++) {
-      for(int row = height - 1; row >= 0; row--){
-        if(shape[row][col] != 0){
+      for (int row = height - 1; row >= 0; row--) {
+        if (shape[row][col] != 0) {
           int x = col + block.getX();
           int y = row + block.getY() + 1;
-          if(y < 0){
+          if (y < 0) {
             break;
           }
-          if(background[y][x] != null) return true;
+          if (background[y][x] != null)
+            return true;
           break;
         }
       }
@@ -85,8 +90,8 @@ public class GameArea extends JPanel {
     return false;
   }
 
-  private boolean checkLeft(){
-    if(block.getEdgeL() == 0){
+  private boolean checkLeft() {
+    if (block.getEdgeL() == 0) {
       return true;
     }
 
@@ -95,11 +100,13 @@ public class GameArea extends JPanel {
     int[][] shape = block.getShape();
     for (int row = 0; row < height; row++) {
       for (int col = 0; col < width; col++) {
-        if(shape[row][col] != 0){
+        if (shape[row][col] != 0) {
           int x = col + block.getX() - 1;
           int y = row + block.getY();
-          if(y < 0) break;
-          if(background[y][x] != null) return true;
+          if (y < 0)
+            break;
+          if (background[y][x] != null)
+            return true;
         }
       }
     }
@@ -107,8 +114,8 @@ public class GameArea extends JPanel {
     return false;
   }
 
-  private boolean checkRight(){
-    if(block.getEdgeR() == gridColumns){
+  private boolean checkRight() {
+    if (block.getEdgeR() == gridColumns) {
       return true;
     }
 
@@ -117,11 +124,13 @@ public class GameArea extends JPanel {
     int[][] shape = block.getShape();
     for (int row = 0; row < height; row++) {
       for (int col = width - 1; col >= 0; col--) {
-        if(shape[row][col] != 0){
+        if (shape[row][col] != 0) {
           int x = col + block.getX() + 1;
           int y = row + block.getY();
-          if(y < 0) break;
-          if(background[y][x] != null) return true;
+          if (y < 0)
+            break;
+          if (background[y][x] != null)
+            return true;
         }
       }
     }
@@ -129,18 +138,18 @@ public class GameArea extends JPanel {
     return false;
   }
 
-  private boolean isRotationValid(){
+  private boolean isRotationValid() {
     int newWidth = block.getWidth();
     int newX = block.getX();
 
-    if(newWidth + newX > gridColumns || newX < 0){
+    if (newWidth + newX > gridColumns || newX < 0) {
       return false;
     }
     return true;
   }
 
-  public boolean isOutOfBounds(){
-    if(block.getY() < 0){
+  public boolean isOutOfBounds() {
+    if (block.getY() < 0) {
       block = null;
       return true;
     }
@@ -156,28 +165,28 @@ public class GameArea extends JPanel {
     return true;
   }
 
-  //spawner
+  // spawner
   public void spawnBlock() {
     block = new Blocks(new int[][] {
         { 1, 0 },
         { 1, 0 },
-        { 1, 1 } }, Color.blue);
+        { 1, 1 } });
     block.spawn(gridColumns);
   }
 
-  //line completion
-  public int clearLines(){
+  // line completion
+  public int clearLines() {
     boolean isComplete;
     int clearedLines = 0;
-    for(int row = gridRows - 1; row >= 0; row--){
+    for (int row = gridRows - 1; row >= 0; row--) {
       isComplete = true;
-      for(int col = 0; col < gridColumns; col++){
-        if(background[row][col] == null){
+      for (int col = 0; col < gridColumns; col++) {
+        if (background[row][col] == null) {
           isComplete = false;
           break;
         }
       }
-      if(isComplete){
+      if (isComplete) {
         clearLine(row);
         shiftDown(row);
         clearLine(0);
@@ -188,14 +197,16 @@ public class GameArea extends JPanel {
     }
     return clearedLines;
   }
-  private void clearLine(int row){
+
+  private void clearLine(int row) {
     for (int i = 0; i < gridColumns; i++) {
       background[row][i] = null;
     }
   }
-  private void shiftDown(int r){
+
+  private void shiftDown(int r) {
     for (int row = r; row > 0; row--) {
-      for(int col = 0; col < gridColumns; col++){
+      for (int col = 0; col < gridColumns; col++) {
         background[row][col] = background[row - 1][col];
       }
     }
