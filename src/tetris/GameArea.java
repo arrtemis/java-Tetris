@@ -2,7 +2,6 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -24,15 +23,74 @@ public class GameArea extends JPanel {
     background = new Color[gridRows][gridColumns];
   }
 
-  private boolean atBottom(){
-    if(block.getBottom() == gridRows){
+  // movements
+  public void moveBlockLeft() { // <-- key
+    if(atEdgeL()) return;
+
+    block.moveLeft();
+    repaint();
+  }
+
+  public void moveBlockRight() { // --> key
+    if(atEdgeR()) return;
+
+    block.moveRight();
+    repaint();
+  }
+
+  public void dropBlockDown() { // down arrow key
+    while (!atBottom()) {
+      block.moveDown();
+    }
+    repaint();
+  }
+
+  public void rotateBlock() { // up arrow key
+    int currentRotation = block.getCurrentRotation();
+
+    block.rotate();
+
+    if(!isRotationValid()){
+      block.setRotation(currentRotation);
+    }
+    
+    repaint();
+  }
+
+  //movement validators
+  private boolean atBottom() {
+    if (block.getBottom() == gridRows) {
       return true;
     }
     return false;
   }
 
-  public boolean moveBlockDown(){
-    if(atBottom()){
+  private boolean atEdgeL(){
+    if(block.getEdgeL() == 0){
+      return true;
+    }
+    return false;
+  }
+
+  private boolean atEdgeR(){
+    if(block.getEdgeR() == gridColumns){
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isRotationValid(){
+    int newWidth = block.getWidth();
+    int newX = block.getX();
+
+    if(newWidth + newX > gridColumns || newX < 0){
+      return false;
+    }
+    return true;
+  }
+
+  public boolean moveBlockDown() {
+    if (atBottom()) {
       moveBlockToBackground();
       return false;
     }
@@ -49,9 +107,9 @@ public class GameArea extends JPanel {
     block.spawn(gridColumns);
   }
 
-  //foreground
+  // foreground
   private void drawBlock(Graphics g) {
-    //block details
+    // block details
     int height = block.getHeight();
     int width = block.getWidth();
     Color color = block.getColor();
@@ -68,14 +126,14 @@ public class GameArea extends JPanel {
     }
   }
 
-  //background
-  private void drawBackground(Graphics g){
+  // background
+  private void drawBackground(Graphics g) {
     Color color;
     for (int row = 0; row < background.length; row++) {
       for (int col = 0; col < background[0].length; col++) {
         color = background[row][col];
 
-        if(color != null){
+        if (color != null) {
           int xPos = col * gridCellSize;
           int yPos = row * gridCellSize;
           fill(g, color, xPos, yPos);
@@ -84,9 +142,9 @@ public class GameArea extends JPanel {
     }
   }
 
-  //move to background
-  private void moveBlockToBackground(){
-    //block details
+  // move to background
+  private void moveBlockToBackground() {
+    // block details
     int height = block.getHeight();
     int width = block.getWidth();
     Color color = block.getColor();
@@ -96,17 +154,17 @@ public class GameArea extends JPanel {
 
     for (int row = 0; row < shape.length; row++) {
       for (int col = 0; col < shape[0].length; col++) {
-        if(shape[row][col] == 1){
+        if (shape[row][col] == 1) {
           background[row + yPos][col + xPos] = color;
         }
       }
     }
-    
+
   }
 
-  private void fill(Graphics g, Color color, int xPos, int yPos){
+  private void fill(Graphics g, Color color, int xPos, int yPos) {
     g.setColor(color);
-    g.fillRect(xPos,yPos, gridCellSize, gridCellSize);
+    g.fillRect(xPos, yPos, gridCellSize, gridCellSize);
     g.setColor(Color.black);
     g.drawRect(xPos, yPos, gridCellSize, gridCellSize);
   }
