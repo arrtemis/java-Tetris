@@ -25,20 +25,21 @@ public class GameArea extends JPanel {
 
   // movements
   public void moveBlockLeft() { // <-- key
-    if(checkLeft()) return;
+    if(checkLeft() || block == null) return;
 
     block.moveLeft();
     repaint();
   }
 
   public void moveBlockRight() { // --> key
-    if(checkRight()) return;
+    if(checkRight() || block == null) return;
 
     block.moveRight();
     repaint();
   }
 
   public void dropBlockDown() { // down arrow key
+    if(block == null) return;
     while (!checkBottom()) {
       block.moveDown();
     }
@@ -46,6 +47,7 @@ public class GameArea extends JPanel {
   }
 
   public void rotateBlock() { // up arrow key
+    if(block == null) return;
     int currentRotation = block.getCurrentRotation();
 
     block.rotate();
@@ -137,10 +139,16 @@ public class GameArea extends JPanel {
     return true;
   }
 
+  public boolean isOutOfBounds(){
+    if(block.getY() < 0){
+      block = null;
+      return true;
+    }
+    return false;
+  }
+
   public boolean moveBlockDown() {
     if (checkBottom()) {
-      moveBlockToBackground();
-      clearLines();
       return false;
     }
     block.moveDown();
@@ -158,8 +166,9 @@ public class GameArea extends JPanel {
   }
 
   //line completion
-  public void clearLines(){
+  public int clearLines(){
     boolean isComplete;
+    int clearedLines = 0;
     for(int row = gridRows - 1; row >= 0; row--){
       isComplete = true;
       for(int col = 0; col < gridColumns; col++){
@@ -173,9 +182,11 @@ public class GameArea extends JPanel {
         shiftDown(row);
         clearLine(0);
         row++;
+        clearedLines++;
         repaint();
       }
     }
+    return clearedLines;
   }
   private void clearLine(int row){
     for (int i = 0; i < gridColumns; i++) {
@@ -226,7 +237,7 @@ public class GameArea extends JPanel {
   }
 
   // move to background
-  private void moveBlockToBackground() {
+  public void moveBlockToBackground() {
     // block details
     int height = block.getHeight();
     int width = block.getWidth();
@@ -235,8 +246,8 @@ public class GameArea extends JPanel {
     int xPos = block.getX();
     int yPos = block.getY();
 
-    for (int row = 0; row < shape.length; row++) {
-      for (int col = 0; col < shape[0].length; col++) {
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
         if (shape[row][col] == 1) {
           background[row + yPos][col + xPos] = color;
         }

@@ -4,19 +4,49 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class GameFrame extends JFrame {
   private GameArea ga;
+  private JLabel scoreDisplay, levelDisplay, score, level;
 
   public GameFrame() {
+    scoreDisplay = new JLabel("Score");
+    levelDisplay = new JLabel("Level");
+    score = new JLabel("10");
+    level = new JLabel("1");
     ga = new GameArea(10);
+
+    scoreDisplay.setBounds(439, 378, 55, 24);
+    levelDisplay.setBounds(446, 70, 50, 24);
+    score.setBounds(458, 402, 15, 24);
+    level.setBounds(461, 94, 10, 24);
+
     initComponents();
     initControls();
+
     add(ga);
+    add(scoreDisplay);
+    add(levelDisplay);
+    add(score);
+    add(level);
+
     startGame();
+  }
+
+  public void startGame() {
+    new GameThread(ga, this).start();
+  }
+
+  public void updateScore(int score) {
+    this.score.setText(String.valueOf(score));
+  }
+
+  public void updateLevel(int level) {
+    this.level.setText(String.valueOf(level));
   }
 
   private void initControls() {
@@ -52,10 +82,6 @@ public class GameFrame extends JFrame {
         ga.dropBlockDown();
       }
     });
-  }
-
-  public void startGame() {
-    new GameThread(ga).start();
   }
 
   public void initComponents() {
