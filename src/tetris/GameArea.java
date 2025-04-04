@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import tetrisblocks.*;
 
 public class GameArea extends JPanel {
   private int gridColumns;
@@ -167,10 +168,7 @@ public class GameArea extends JPanel {
 
   // spawner
   public void spawnBlock() {
-    block = new Blocks(new int[][] {
-        { 1, 0 },
-        { 1, 0 },
-        { 1, 1 } });
+    block = new Ishape();
     block.spawn(gridColumns);
   }
 
