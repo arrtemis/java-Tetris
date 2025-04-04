@@ -14,6 +14,10 @@ public class GameArea extends JPanel {
   private Blocks block;
   private Blocks[] blocks;
   private Color[][] background;
+  private int lastShapeIndex = -1;
+  private int secondLastShapeIndex = -1;
+  private Color lastColor = null;
+  private Color secondLastColor = null;
 
   public GameArea(int columns) {
     setBounds(150, 12, 240, 456);
@@ -23,16 +27,19 @@ public class GameArea extends JPanel {
     gridColumns = columns;
     gridCellSize = this.getBounds().width / gridColumns;
     gridRows = this.getBounds().height / gridCellSize;
-    background = new Color[gridRows][gridColumns];
-    blocks = new Blocks[]{
-      new Lshape(),
-      new Jshape(),
-      new Ishape(),
-      new Oshape(),
-      new Tshape(),
-      new Sshape(),
-      new Zshape()
+    blocks = new Blocks[] {
+        new Lshape(),
+        new Jshape(),
+        new Ishape(),
+        new Oshape(),
+        new Tshape(),
+        new Sshape(),
+        new Zshape()
     };
+  }
+
+  public void initBackground(){
+    background = new Color[gridRows][gridColumns];
   }
 
   // movements
@@ -62,7 +69,8 @@ public class GameArea extends JPanel {
   }
 
   public void rotateBlock() { // up arrow key
-    if (block == null) return;
+    if (block == null)
+      return;
 
     int currentRotation = block.getCurrentRotation();
 
@@ -70,10 +78,14 @@ public class GameArea extends JPanel {
     int newX = block.getX();
     int newY = block.getY();
 
-    if(newY > 0 && background[newY][newX] != null) block.setRotation(currentRotation);
-    if(block.getEdgeL() < 0) block.setX(0);
-    if(block.getEdgeR() >= gridColumns) block.setX(gridColumns - block.getWidth());
-    if(block.getBottom() >= gridRows) block.setY(gridRows - block.getHeight());
+    if (newY > 0 && background[newY][newX] != null)
+      block.setRotation(currentRotation);
+    if (block.getEdgeL() < 0)
+      block.setX(0);
+    if (block.getEdgeR() >= gridColumns)
+      block.setX(gridColumns - block.getWidth());
+    if (block.getBottom() >= gridRows)
+      block.setY(gridRows - block.getHeight());
 
     repaint();
   }
@@ -173,8 +185,36 @@ public class GameArea extends JPanel {
   // spawner
   public void spawnBlock() {
     Random rng = new Random();
-    block = blocks[rng.nextInt(blocks.length)];
+
+    // Get a new block shape that's not the same as the last two
+    int nextBlockIndex;
+    do {
+      nextBlockIndex = rng.nextInt(blocks.length);
+    } while (nextBlockIndex == lastShapeIndex && nextBlockIndex == secondLastShapeIndex);
+
+    // Update shape history
+    secondLastShapeIndex = lastShapeIndex;
+    lastShapeIndex = nextBlockIndex;
+
+    // Set the block
+    block = blocks[nextBlockIndex];
     block.spawn(gridColumns);
+
+    // Now ensure the color isn't repeated more than twice in a row
+    Color nextColor;
+    do {
+      // Generate a new color
+      int colorIndex = rng.nextInt(block.getColors().length);
+      nextColor = block.getColors()[colorIndex];
+    } while (nextColor.equals(lastColor) && nextColor.equals(secondLastColor));
+
+    // Update color history
+    secondLastColor = lastColor;
+    lastColor = nextColor;
+
+    // Set the color
+    block.setColor(nextColor);
+
   }
 
   // line completion

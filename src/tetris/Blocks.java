@@ -84,10 +84,6 @@ public class Blocks {
 
     x = rng.nextInt(gridWidth - getWidth());
     y = -getHeight();
-
-    int n = rng.nextInt(colors.length);
-
-    color = colors[n];
   }
 
   // movements
@@ -163,5 +159,13 @@ public class Blocks {
   public void setRotation(int rotation) {
     currentRotation = rotation;
     shape = shapes[currentRotation];
+  }
+
+  public Color[] getColors() {
+    return colors;
+  }
+
+  public void setColor(Color newColor) {
+    color = newColor;
   }
 }
