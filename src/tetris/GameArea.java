@@ -25,21 +25,21 @@ public class GameArea extends JPanel {
 
   // movements
   public void moveBlockLeft() { // <-- key
-    if(atEdgeL()) return;
+    if(checkLeft()) return;
 
     block.moveLeft();
     repaint();
   }
 
   public void moveBlockRight() { // --> key
-    if(atEdgeR()) return;
+    if(checkRight()) return;
 
     block.moveRight();
     repaint();
   }
 
   public void dropBlockDown() { // down arrow key
-    while (!atBottom()) {
+    while (!checkBottom()) {
       block.moveDown();
     }
     repaint();
@@ -58,21 +58,40 @@ public class GameArea extends JPanel {
   }
 
   //movement validators
-  private boolean atBottom() {
+  private boolean checkBottom() {
     if (block.getBottom() == gridRows) {
       return true;
     }
+
+    int height = block.getHeight();
+    int width = block.getWidth();
+    int[][] shape = block.getShape();
+
+    for (int col = 0; col < width; col++) {
+      for(int row = height - 1; row >= 0; row--){
+        if(shape[row][col] != 0){
+          int x = col + block.getX();
+          int y = row + block.getY() + 1;
+          if(y < 0){
+            break;
+          }
+          if(background[y][x] != null) return true;
+          break;
+        }
+      }
+    }
+
     return false;
   }
 
-  private boolean atEdgeL(){
+  private boolean checkLeft(){
     if(block.getEdgeL() == 0){
       return true;
     }
     return false;
   }
 
-  private boolean atEdgeR(){
+  private boolean checkRight(){
     if(block.getEdgeR() == gridColumns){
       return true;
     }
@@ -90,7 +109,7 @@ public class GameArea extends JPanel {
   }
 
   public boolean moveBlockDown() {
-    if (atBottom()) {
+    if (checkBottom()) {
       moveBlockToBackground();
       return false;
     }
@@ -99,6 +118,7 @@ public class GameArea extends JPanel {
     return true;
   }
 
+  //spawner
   public void spawnBlock() {
     block = new Blocks(new int[][] {
         { 1, 0 },
