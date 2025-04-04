@@ -66,7 +66,6 @@ public class GameArea extends JPanel {
     int height = block.getHeight();
     int width = block.getWidth();
     int[][] shape = block.getShape();
-
     for (int col = 0; col < width; col++) {
       for(int row = height - 1; row >= 0; row--){
         if(shape[row][col] != 0){
@@ -88,6 +87,21 @@ public class GameArea extends JPanel {
     if(block.getEdgeL() == 0){
       return true;
     }
+
+    int height = block.getHeight();
+    int width = block.getWidth();
+    int[][] shape = block.getShape();
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
+        if(shape[row][col] != 0){
+          int x = col + block.getX() - 1;
+          int y = row + block.getY();
+          if(y < 0) break;
+          if(background[y][x] != null) return true;
+        }
+      }
+    }
+
     return false;
   }
 
@@ -95,6 +109,21 @@ public class GameArea extends JPanel {
     if(block.getEdgeR() == gridColumns){
       return true;
     }
+
+    int height = block.getHeight();
+    int width = block.getWidth();
+    int[][] shape = block.getShape();
+    for (int row = 0; row < height; row++) {
+      for (int col = width - 1; col >= 0; col--) {
+        if(shape[row][col] != 0){
+          int x = col + block.getX() + 1;
+          int y = row + block.getY();
+          if(y < 0) break;
+          if(background[y][x] != null) return true;
+        }
+      }
+    }
+
     return false;
   }
 
