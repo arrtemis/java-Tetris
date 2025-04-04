@@ -2,6 +2,8 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import tetrisblocks.*;
@@ -11,6 +13,7 @@ public class GameArea extends JPanel {
   private int gridRows;
   private int gridCellSize;
   private Blocks block;
+  private Blocks[] blocks;
   private Color[][] background;
 
   public GameArea(int columns) {
@@ -22,6 +25,15 @@ public class GameArea extends JPanel {
     gridCellSize = this.getBounds().width / gridColumns;
     gridRows = this.getBounds().height / gridCellSize;
     background = new Color[gridRows][gridColumns];
+    blocks = new Blocks[]{
+      new Lshape(),
+      new Jshape(),
+      new Ishape(),
+      new Oshape(),
+      new Tshape(),
+      new Sshape(),
+      new Zshape()
+    };
   }
 
   // movements
@@ -51,15 +63,13 @@ public class GameArea extends JPanel {
   }
 
   public void rotateBlock() { // up arrow key
-    if (block == null)
-      return;
-    int currentRotation = block.getCurrentRotation();
+    if (block == null) return;
 
     block.rotate();
 
-    if (!isRotationValid()) {
-      block.setRotation(currentRotation);
-    }
+    if(block.getEdgeL() < 0) block.setX(0);
+    if(block.getEdgeR() >= gridColumns) block.setX(gridColumns - block.getWidth());
+    if(block.getBottom() >= gridRows) block.setY(gridRows - block.getHeight());
 
     repaint();
   }
@@ -139,16 +149,6 @@ public class GameArea extends JPanel {
     return false;
   }
 
-  private boolean isRotationValid() {
-    int newWidth = block.getWidth();
-    int newX = block.getX();
-
-    if (newWidth + newX > gridColumns || newX < 0) {
-      return false;
-    }
-    return true;
-  }
-
   public boolean isOutOfBounds() {
     if (block.getY() < 0) {
       block = null;
@@ -168,7 +168,8 @@ public class GameArea extends JPanel {
 
   // spawner
   public void spawnBlock() {
-    block = new Ishape();
+    Random rng = new Random();
+    block = blocks[rng.nextInt(blocks.length)];
     block.spawn(gridColumns);
   }
 
