@@ -59,10 +59,16 @@ public class GameArea extends JPanel {
     repaint();
   }
 
-  public void dropBlockDown() { // down arrow key
-    if (block == null)
-      return;
-    while (!checkBottom()) {
+  public void moveDownFast() { // down arrow key
+    if (block == null) return;
+    if(checkBottom()) return;
+    block.moveDown();
+    repaint();
+  }
+
+  public void instaDrop(){
+    if (block == null) return;
+    while(!checkBottom()){
       block.moveDown();
     }
     repaint();

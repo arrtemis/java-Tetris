@@ -83,6 +83,7 @@ public class GameFrame extends JFrame {
     im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
     im.put(KeyStroke.getKeyStroke("UP"), "up");
     im.put(KeyStroke.getKeyStroke("DOWN"), "down");
+    im.put(KeyStroke.getKeyStroke("SPACE"), "space");
 
     am.put("left", new AbstractAction() {
       @Override
@@ -105,7 +106,13 @@ public class GameFrame extends JFrame {
     am.put("down", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ga.dropBlockDown();
+        ga.moveDownFast();
+      }
+    });
+    am.put("space", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e){
+        ga.instaDrop();
       }
     });
   }

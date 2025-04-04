@@ -25,8 +25,7 @@ public class Tetris {
   public static void gameOver(int score){
     String playerName = JOptionPane.showInputDialog("Game over\nPlease Enter your name.");
     gf.setVisible(false);
-    lf.addPlayerName(playerName, score);
-  }
+    lf.addPlayerName(playerName, score);  }
 
   public static void main(String[] args) {
 
