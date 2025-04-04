@@ -3,7 +3,6 @@ package tetris;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import tetrisblocks.*;
@@ -65,8 +64,13 @@ public class GameArea extends JPanel {
   public void rotateBlock() { // up arrow key
     if (block == null) return;
 
-    block.rotate();
+    int currentRotation = block.getCurrentRotation();
 
+    block.rotate();
+    int newX = block.getX();
+    int newY = block.getY();
+
+    if(newY > 0 && background[newY][newX] != null) block.setRotation(currentRotation);
     if(block.getEdgeL() < 0) block.setX(0);
     if(block.getEdgeR() >= gridColumns) block.setX(gridColumns - block.getWidth());
     if(block.getBottom() >= gridRows) block.setY(gridRows - block.getHeight());

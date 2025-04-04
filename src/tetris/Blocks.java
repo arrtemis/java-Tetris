@@ -85,7 +85,9 @@ public class Blocks {
     x = rng.nextInt(gridWidth - getWidth());
     y = -getHeight();
 
-    color = colors[rng.nextInt(colors.length)];
+    int n = rng.nextInt(colors.length);
+
+    color = colors[n];
   }
 
   // movements
